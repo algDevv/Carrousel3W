@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Choose Your Partner</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Nunito:wght@600;700;800&display=swap');
+
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background: #F5A623;
+            font-family: 'Nunito', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow-x: hidden;
+        }
+
+        .page {
+            width: 100%;
+            max-width: 1440px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 60px 0 80px;
+        }
+
+        h1 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 64px;
+            color: #1a1a1a;
+            font-weight: 900;
+            text-align: center;
+            text-transform: uppercase;
+            line-height: 1.1;
+            margin-bottom: 60px;
+        }
+
+        .carousel-area {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        .carousel-row {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .arrow {
+            background: none;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .arrow svg {
+            width: 36px;
+            height: 36px;
+            stroke: #1a1a1a;
+            stroke-width: 2.5;
+            fill: none;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            transition: opacity 0.2s;
+        }
+
+        .arrow:hover svg {
+            opacity: 0.5;
+        }
+
+        .cards-row {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 28px;
+        }
+
+        .card {
+            background: #F0A020;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            overflow: hidden;
+        }
+
+        .card img {
+            object-fit: contain;
+            image-rendering: pixelated;
+            image-rendering: crisp-edges;
+        }
+
+        .card-main {
+            width: 422px;
+            height: 422px;
+            border-radius: 70px;
+        }
+
+        .card-main img {
+            width: 300px;
+            height: 300px;
+        }
+
+        .card-side {
+            width: 222px;
+            height: 222px;
+            border-radius: 40px;
+            opacity: 0.85;
+        }
+
+        .card-side img {
+            width: 155px;
+            height: 155px;
+        }
+
+        .info {
+            margin-top: 44px;
+            text-align: center;
+            min-height: 80px;
+        }
+
+        .poke-name {
+            font-size: 40px;
+            font-weight: 800;
+            color: #1a1a1a;
+            text-transform: capitalize;
+            line-height: 1.1;
+        }
+
+        .poke-types {
+            margin-top: 10px;
+            font-size: 20px;
+            font-weight: 600;
+            color: #1a1a1a;
+            opacity: 0.65;
+            text-transform: capitalize;
+        }
+
+        .btn-choose {
+            margin-top: 36px;
+            background: #1a1a1a;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            padding: 18px 80px;
+            font-size: 20px;
+            font-weight: 700;
+            font-family: 'Nunito', sans-serif;
+            cursor: pointer;
+            transition: opacity 0.15s, transform 0.1s;
+        }
+
+        .btn-choose:hover {
+            opacity: 0.8;
+            transform: scale(1.02);
+        }
+
+        .btn-choose:active {
+            transform: scale(0.97);
+        }
+
+        .loader {
+            position: fixed;
+            inset: 0;
+            background: #F5A623;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 999;
+            transition: opacity 0.4s;
+        }
+
+        .loader.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid rgba(26, 26, 26, 0.2);
+            border-top-color: #1a1a1a;
+            border-radius: 50%;
+            animation: spin 0.75s linear infinite;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        @media (max-width: 1024px) {
+            .page {
+                padding: 70px 0 60px;
+            }
+
+            h1 {
+                font-size: 32px;
+            }
+
+            .arrow {
+                display: none;
+            }
+
+            .cards-row {
+                gap: 14px;
+                padding: 0 8px;
+            }
+
+            .card-main {
+                width: 220px;
+                height: 220px;
+                border-radius: 40px;
+            }
+
+            .card-main img {
+                width: 150px;
+                height: 150px;
+            }
+
+            .card-side {
+                width: 129px;
+                height: 129px;
+                border-radius: 20px;
+            }
+
+            .card-side img {
+                width: 100px;
+                height: 100px;
+            }
+
+            .info {
+                margin-top: 32px;
+            }
+
+            .poke-name {
+                font-size: 28px;
+            }
+
+            .poke-types {
+                font-size: 15px;
+            }
+
+            .btn-choose {
+                padding: 14px 56px;
+                font-size: 17px;
+                margin-top: 26px;
+            }
+        }
+
+        @media (min-width: 1280px) {
+            .arrow {
+                padding: 0px 32px;
+            }
+        }
+
+        @media (max-width: 400px) {
+            .card-main {
+                width: 210px;
+                height: 210px;
+                border-radius: 32px;
+            }
+
+            .card-main img {
+                width: 148px;
+                height: 148px;
+            }
+
+            .card-side {
+                width: 138px;
+                height: 138px;
+                border-radius: 16px;
+            }
+
+            .card-side img {
+                width: 95px;
+                height: 95px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="loader" id="loader">
+        <div class="spinner"></div>
+    </div>
+
+    <div class="page">
+        <h1>Choose Your<br>Partner</h1>
+
+        <div class="carousel-area">
+            <div class="carousel-row">
+                <button class="arrow" id="btn-prev" aria-label="Précédent">
+                    <svg viewBox="0 0 24 24">
+                        <polyline points="15 18 9 12 15 6" />
+                    </svg>
+                </button>
+
+                <div class="cards-row" id="cards-row">
+                    <div class="card card-side" id="card-prev">
+                        <img id="img-prev" src="" alt="" />
+                    </div>
+                    <div class="card card-main" id="card-main">
+                        <img id="img-main" src="" alt="" />
+                    </div>
+                    <div class="card card-side" id="card-next">
+                        <img id="img-next" src="" alt="" />
+                    </div>
+                </div>
+
+                <button class="arrow" id="btn-next" aria-label="Suivant">
+                    <svg viewBox="0 0 24 24">
+                        <polyline points="9 18 15 12 9 6" />
+                    </svg>
+                </button>
+            </div>
+
+            <div class="info">
+                <div class="poke-name" id="poke-name">…</div>
+                <div class="poke-types" id="poke-types">…</div>
+            </div>
+
+            <button class="btn-choose">Choisir</button>
+        </div>
+    </div>
+
+
+</body>
+
+</html>
