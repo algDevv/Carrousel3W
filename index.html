@@ -344,7 +344,78 @@
         </div>
     </div>
 
+    <script>
+        const mod = (n, m) => ((n % m) + m) % m;
 
+        function randomSample(max, count) {
+            const set = new Set();
+            while (set.size < count) set.add(Math.floor(Math.random() * max) + 1);
+            return [...set];
+        }
+
+        let pokemons = [];
+        let current = 0;
+
+        const loader = document.getElementById('loader');
+        const imgPrev = document.getElementById('img-prev');
+        const imgMain = document.getElementById('img-main');
+        const imgNext = document.getElementById('img-next');
+        const nameEl = document.getElementById('poke-name');
+        const typesEl = document.getElementById('poke-types');
+        const btnPrev = document.getElementById('btn-prev');
+        const btnNext = document.getElementById('btn-next');
+        const cardsRow = document.getElementById('cards-row');
+
+        async function fetchPokemon(id) {
+            const res = await fetch(`https://pokeapi.co/api/v2/pokemon/${id}`);
+            const data = await res.json();
+            return {
+                name: data.name,
+                types: data.types.map(t => t.type.name).join(' / '),
+                sprite: data.sprites.front_default
+            };
+        }
+
+        async function init() {
+            const ids = randomSample(1025, 10);
+            pokemons = await Promise.all(ids.map(fetchPokemon));
+            current = 0;
+            render();
+            loader.classList.add('hidden');
+        }
+
+        function render() {
+            const p = pokemons[current];
+            const prev = pokemons[mod(current - 1, pokemons.length)];
+            const next = pokemons[mod(current + 1, pokemons.length)];
+
+            imgPrev.src = prev.sprite || ''; imgPrev.alt = prev.name;
+            imgMain.src = p.sprite || ''; imgMain.alt = p.name;
+            imgNext.src = next.sprite || ''; imgNext.alt = next.name;
+
+            nameEl.textContent = p.name;
+            typesEl.textContent = p.types;
+        }
+
+        function go(dir) {
+            current = mod(current + dir, pokemons.length);
+            render();
+        }
+
+        btnPrev.addEventListener('click', () => go(-1));
+        btnNext.addEventListener('click', () => go(1));
+
+        let touchStartX = 0;
+        cardsRow.addEventListener('touchstart', e => { touchStartX = e.touches[0].clientX; }, { passive: true });
+        cardsRow.addEventListener('touchend', e => { const dx = e.changedTouches[0].clientX - touchStartX; if (Math.abs(dx) > 40) go(dx < 0 ? 1 : -1); });
+
+        let mouseStart = 0, dragging = false;
+        cardsRow.addEventListener('mousedown', e => { dragging = true; mouseStart = e.clientX; });
+        document.addEventListener('mouseup', e => { if (!dragging) return; dragging = false; const dx = e.clientX - mouseStart; if (Math.abs(dx) > 40) go(dx < 0 ? 1 : -1); });
+
+        init();
+    </script>
 </body>
 
 </html>
+
